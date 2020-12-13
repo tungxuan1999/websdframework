@@ -157,13 +157,18 @@ class UserController extends Controller
                     $idd = $request->input('id');
                     if($idd != "")
                     {
-                        $user = DB::table('users')->where('id', $idd)->first();
-                        if($user)
+                        $user = DB::table('users')->where('id', $idd);
+                        if($user->first())
                         {
                             $user->delete();
                             if($user)
                             {
                                 $notification = $this->ShowMessage('Delete success');
+                                $profile = DB::table('profiles')->where('user_id',$idd);
+                                if($profile->first())
+                                {
+                                    $profile->delete();
+                                }
                             }
                             else{
                                 $notification = $this->ShowMessage('Delete fail');

@@ -49,5 +49,6 @@ Route::get('user/users/{id}', [UserController::class, 'show']);
 Route::resource('profiles', ProfileController::class);
 Route::get('profiles/{id}', [ProfileController::class, 'show']);
 
-Route::post('/getmsg',[UserController::class, 'checkEmail'])->name('user.checkEmail');
-Route::get('ajax', function(){ return view('ajax'); });
+Route::post('/checkmail',[UserController::class, 'checkEmail'])->name('user.checkEmail');
+Route::post('/getprofile',[ProfileController::class, 'getProfile'])->name('profile.getProfile');
+Route::post('/postprofile',[ProfileController::class, 'postProfile'])->name('profile.postProfile');

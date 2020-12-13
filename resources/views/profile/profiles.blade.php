@@ -7,7 +7,7 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Profiles</h6>
-            <input type='button' onclick="showDialog(0,0,'','','','','add')" value='Add New'/>
+            <!-- <input type='button' onclick="showDialog(0,0,'','','','','add')" value='Add New'/> -->
         </div>
         <?php
         if($notification = Session::get('notification'))
@@ -42,7 +42,7 @@
                                 else
                                 echo("<td><a href='/profiles/{$profile->id}'>{$profile->$i}</a></td>");
                             }
-                            echo("<td><input type='button' onclick=".'"'."showDialog($profile->id,$profile->user_id,'$profile->avatar','$profile->full_name','$profile->address','$profile->birthday','update')".'"'." value='Edit'/></td>");
+                            echo("<td><input type='button' class='btn btn-primary' onclick=".'"'."showDialog($profile->id,$profile->user_id,'$profile->avatar','$profile->full_name','$profile->address','$profile->birthday','update')".'"'." value='Edit'/></td>");
                             echo("</tr>");
                         }
                         echo("</tbody>");
@@ -67,6 +67,9 @@
                     @method('PUT')<!-- khai báo này dùng để thiết lập phương thức PUT
                                         nếu không khai báo thì khi submit không thiết lập HttpPUT -->
                     <div class="modal-body">
+                        <div class="form-group">
+                            <div class='alert alert-danger' id="errorProfile">Notification:</div>
+                        </div>
                         <div class="form-group" >
                             <input type="text" name="id" class="form-control form-control-user" id="id" placeholder="ID" hidden="true">
                         </div>
@@ -89,11 +92,11 @@
                             <input type="text" name="b64" class="form-control form-control-user" id="b64" hidden="true">
                         </div>
                         <div class="form-group" style="text-align:center">
-                            <img id="img" height="150" >
+                            <img id="img" height="100" >
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary" value="Update">
+                        <input type="submit" class="btn btn-primary" value="Update" onclick="return checknull()">
                     </div>
 			</form>
         </div>
@@ -102,7 +105,44 @@
 </div>
 
   <script type="text/javascript">
-    function checkNull()
+    function checknull()
+    {
+        var user_id = $("input[name=user_id]").val();
+        var full_name = $("input[name=full_name]").val();
+        var avatar = $("input[name=b64]").val();
+        var address = $("input[name=address]").val();
+        var birthday = $("input[name=birthday]").val();
+        $("#errorProfile").html('Notification:');
+        var check = true;
+        if(user_id.length == 0)
+        {
+            $("#errorProfile").append('</br>'+'User ID null');
+            check = false;
+        }
+        if(full_name.length == 0)
+        {
+            $("#errorProfile").append('</br>'+'Name null');
+            check = false;
+        }
+        if(avatar.length == 0)
+        {
+            $("#errorProfile").append('</br>'+'Avatar null');
+            check = false;
+        }
+        if(address.length == 0)
+        {
+            $("#errorProfile").append('</br>'+'Address null');
+            check = false;
+        }
+        if(birthday.length == 0)
+        {
+            $("#errorProfile").append('</br>'+'Birthday null');
+            check = false;
+        }
+        return check;
+    }
+
+    function checkImgProfile()
     {
         if (this.files && this.files[0]) {
     
@@ -117,29 +157,31 @@
         }
     }
 
-    document.getElementById("avatar").addEventListener("change", checkNull);
+    document.getElementById("avatar").addEventListener("change", checkImgProfile);
 
     function showDialog(id,user_id,avatar,name,add,birthday,type)
     {
-      var model = document.getElementById('showEdit');
-      switch(type)
-      {
-          case 'update':{
-            document.user.action = "{{ route('profiles.update','update') }}";
-          }break;
-          case 'add':{
-            document.user.action = "{{ route('profiles.update','add') }}";
-          }break;
-      }
-      document.getElementById('exampleModalLabel').innerHTML = "Information";
-      document.getElementById('id').value = id;
-      document.getElementById('user_id').value = user_id;
-      document.getElementById('img').src = avatar;
-      document.getElementById('b64').value = avatar;
-      document.getElementById('full_name').value = name;
-      document.getElementById('address').value = add;
-      document.getElementById('birthday').value = birthday;
-      model.style.display = "block";
+        $("#errorProfile").html('Notification:');
+        var model = document.getElementById('showEdit');
+        switch(type)
+        {
+            case 'update':{
+                document.user.action = "{{ route('profiles.update','update') }}";
+            }break;
+            //   case 'add':{
+            //     document.user.action = "{{ route('profiles.update','add') }}";
+            //   }break;
+        }
+        document.getElementById('exampleModalLabel').innerHTML = "Information";
+        document.getElementById('id').value = id;
+        document.getElementById('user_id').value = user_id;
+        document.getElementById('user_id').readOnly = true;
+        document.getElementById('img').src = avatar;
+        document.getElementById('b64').value = avatar;
+        document.getElementById('full_name').value = name;
+        document.getElementById('address').value = add;
+        document.getElementById('birthday').value = birthday;
+        model.style.display = "block";
     }
 
     function hideDialog()
