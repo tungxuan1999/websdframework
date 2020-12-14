@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckAge;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\KindController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +39,18 @@ Route::get('/profiles', function () {
     $profiles = DB::table('profiles')->get();
     return view('profile/profiles',  ['profiles' => $profiles]);
 });
+Route::get('/kinds', function () {
+    $profiles = DB::table('kinds')->get();
+    return view('kind/list',  ['kinds' => $profiles]);
+});
+Route::get('/orders', function () {
+    $profiles = DB::table('orders')->get();
+    return view('order/list',  ['orders' => $profiles]);
+});
+Route::get('/products', function () {
+    $profiles = DB::table('products')->get();
+    return view('product/list',  ['products' => $profiles]);
+});
 Route::get('/check_fail', function (){
     echo "check_fail page";
     return view('home');
@@ -52,3 +67,7 @@ Route::get('profiles/{id}', [ProfileController::class, 'show']);
 Route::post('/checkmail',[UserController::class, 'checkEmail'])->name('user.checkEmail');
 Route::post('/getprofile',[ProfileController::class, 'getProfile'])->name('profile.getProfile');
 Route::post('/postprofile',[ProfileController::class, 'postProfile'])->name('profile.postProfile');
+
+Route::resource('orders', OrderController::class);
+Route::resource('products', ProductController::class);
+Route::resource('kinds', KindController::class);

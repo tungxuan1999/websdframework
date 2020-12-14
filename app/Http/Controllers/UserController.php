@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use DB;
 
@@ -105,7 +106,7 @@ class UserController extends Controller
                         $affected = DB::table('users')
                             ->where('id', $idd)
                             ->update(['name' =>  $request->input('name'),
-                                        'password' =>  $request->input('password'),
+                                        'password' =>  Hash::make('password'),
                                         'remember_token' =>  $request->input('remember_token'),
                                         'updated_at' => $date_update
                                 ]);
@@ -133,7 +134,7 @@ class UserController extends Controller
                                 ->insert([
                                             'name' =>  $request->input('name'),
                                             'email' =>  $request->input('email'),
-                                            'password' =>  $request->input('password'),
+                                            'password' =>  Hash::make($request->input('password')),
                                             'remember_token' =>  $request->input('remember_token'),
                                             'updated_at' => $date_update,
                                             'created_at' => $date_update

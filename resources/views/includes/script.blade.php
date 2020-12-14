@@ -1,3 +1,9 @@
+  <!-- ajax -->
+  <script src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+  <!-- jquery -->
+  <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+
   <!-- Bootstrap core JavaScript-->
   <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
   <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -19,9 +25,3 @@
   <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
   <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
   <script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
-
-  <!-- ajax -->
-  <script src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-
-  <!-- jquery -->
-  <script src="https://code.jquery.com/jquery-3.5.0.js"></script>

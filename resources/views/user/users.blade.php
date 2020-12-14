@@ -2,102 +2,102 @@
 @section('content')
 <div class="container-fluid">
 
-<!-- Page Heading -->
-<h1 class="h3 mb-2 text-gray-800">Users</h1>
+  <!-- Page Heading -->
+  <h1 class="h3 mb-2 text-gray-800">Users</h1>
 
-<!-- DataTales Example -->
-<div class="card shadow mb-4">
-  <div class="card-header py-3">
-      <?php
-        if($notification = Session::get('notification'))
-        {
-            echo $notification;
-        }
-        ?>
-    <input class='btn btn-primary' type='button' style='width:100px' onclick="showDialog(0,'','','','','add')" value='Add New'/>
-  </div>
-  <div class="card-body">
-    <div class="table-responsive">
-      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+  <!-- DataTales Example -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
         <?php
-            echo("<thead>");
-            echo("<tr>");
-            $columns = Schema::getColumnListing('users');
-               foreach($columns as $i)
-               {
-                echo("<th>$i</th>");
-               }
-            echo("<th>Edit</th>");
-            echo("<th>Profile</th>");
-            echo("</tr>");
-            echo("</thead>");
-            echo("</tbody>");
-            foreach($users as $user)
-            {
-                echo("<tr>");
+          if($notification = Session::get('notification'))
+          {
+              echo $notification;
+          }
+          ?>
+      <input class='btn btn-primary' type='button' style='width:100px' onclick="showDialog(0,'','','','','add')" value='Add New'/>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" style="width:100%" cellspacing="0">
+          <?php
+              echo("<thead>");
+              echo("<tr>");
+              $columns = Schema::getColumnListing('users');
                 foreach($columns as $i)
-               {
-                    echo("<td><a href='/profiles/{$user->id}'>{$user->$i}</a></td>");
-               }
-               //Information User
-               echo("<td>
-                  <li class='nav-item'>
-                    <a class='nav-link collapsed' href='#' data-toggle='collapse' data-target='#collapseEdit{$user->id}' aria-expanded='true' aria-controls='collapseEdit{$user->id}'>
-                        <i class='fas fa-fw fa-cog'></i>
-                        <span>Edit</span>
-                    </a>
-                    <div id='collapseEdit{$user->id}' class='collapse' aria-labelledby='headingTwo' data-parent='#accordionSidebar'>
-                        <div class='bg-white py-2 collapse-inner rounded'>
-                        <input class='collapse-item btn btn-primary' type='button' style='width:80px' onclick=".'"'."showDialog($user->id,'$user->name','$user->email','$user->password','$user->remember_token','update')".'"'." value='Update'/>
-                        <input class='collapse-item btn btn-primary' type='button' style='width:80px' onclick=".'"'."showDialog($user->id,'$user->name','$user->email','$user->password','$user->remember_token','delete')".'"'." value='Delete'/>
-                        </div>
-                    </div>
-                  </li>
-               </td>");
-               //Profile
-               echo("<td>
-                    <input class='collapse-item btn btn-primary' type='button' style='width:80px' onclick='getProfile($user->id)' value='Profile'/>
+                {
+                  echo("<th>$i</th>");
+                }
+              echo("<th>Edit</th>");
+              echo("<th>Profile</th>");
+              echo("</tr>");
+              echo("</thead>");
+              echo("</tbody>");
+              foreach($users as $user)
+              {
+                  echo("<tr>");
+                  foreach($columns as $i)
+                {
+                      echo("<td><a href='/profiles/{$user->id}'>{$user->$i}</a></td>");
+                }
+                //Information User
+                echo("<td>
+                    <li class='nav-item'>
+                      <a class='nav-link collapsed' href='#' data-toggle='collapse' data-target='#collapseEdit{$user->id}' aria-expanded='true' aria-controls='collapseEdit{$user->id}'>
+                          <i class='fas fa-fw fa-cog'></i>
+                          <span>Edit</span>
+                      </a>
+                      <div id='collapseEdit{$user->id}' class='collapse' aria-labelledby='headingTwo' data-parent='#accordionSidebar'>
+                          <div class='bg-white py-2 collapse-inner rounded'>
+                          <input class='collapse-item btn btn-primary' type='button' style='width:80px' onclick=".'"'."showDialog($user->id,'$user->name','$user->email','$user->password','$user->remember_token','update')".'"'." value='Update'/>
+                          <input class='collapse-item btn btn-primary' type='button' style='width:80px' onclick=".'"'."showDialog($user->id,'$user->name','$user->email','$user->password','$user->remember_token','delete')".'"'." value='Delete'/>
+                          </div>
+                      </div>
+                    </li>
                 </td>");
-               echo("</tr>");
-            }
-            echo("</tbody>");
-        ?>
-      <!-- <thead>
-          <tr>
-          </tr>
-        </thead>
-        <tfoot>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Email Verified</th>
-            <th>Password</th>
-            <th>Remember Token</th>
-            <th>Create At</th>
-            <th>Update At</th>
-            <th>Edit</th>
-          </tr>
-        </tfoot>
-        <tbody>
-          @foreach($users as $user)
-                <tr>
-                    <td><a href="/profiles/{{$user->id}}">{{$user->id}}</a></td>
-                    <td><a href="/profiles/{{$user->id}}">{{$user->name}}</a></td>
-                    <th><a href="/profiles/{{$user->id}}">{{$user->email}}</a></th>
-                    <th><a href="/profiles/{{$user->id}}">{{$user->email_verified_at}}</a></th>
-                    <th><a href="/profiles/{{$user->id}}">{{$user->password}}</a></th>
-                    <th><a href="/profiles/{{$user->id}}">{{$user->remember_token}}</a></th>
-                    <th><a href="/profiles/{{$user->id}}">{{$user->created_at}}</a></th>
-                    <th><a href="/profiles/{{$user->id}}">{{$user->updated_at}}</a></th>
-                    <td><a href="/profiles/{{$user->id}}/edit" class="btn btn-primary" role="button"></a></td>
-                </tr>
-            @endforeach
-        </tbody> -->
-      </table>
+                //Profile
+                echo("<td>
+                      <input class='collapse-item btn btn-primary' type='button' style='width:80px' onclick='getProfile($user->id)' value='Profile'/>
+                  </td>");
+                echo("</tr>");
+              }
+              echo("</tbody>");
+          ?>
+        <!-- <thead>
+            <tr>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Email Verified</th>
+              <th>Password</th>
+              <th>Remember Token</th>
+              <th>Create At</th>
+              <th>Update At</th>
+              <th>Edit</th>
+            </tr>
+          </tfoot>
+          <tbody>
+            @foreach($users as $user)
+                  <tr>
+                      <td><a href="/profiles/{{$user->id}}">{{$user->id}}</a></td>
+                      <td><a href="/profiles/{{$user->id}}">{{$user->name}}</a></td>
+                      <th><a href="/profiles/{{$user->id}}">{{$user->email}}</a></th>
+                      <th><a href="/profiles/{{$user->id}}">{{$user->email_verified_at}}</a></th>
+                      <th><a href="/profiles/{{$user->id}}">{{$user->password}}</a></th>
+                      <th><a href="/profiles/{{$user->id}}">{{$user->remember_token}}</a></th>
+                      <th><a href="/profiles/{{$user->id}}">{{$user->created_at}}</a></th>
+                      <th><a href="/profiles/{{$user->id}}">{{$user->updated_at}}</a></th>
+                      <td><a href="/profiles/{{$user->id}}/edit" class="btn btn-primary" role="button"></a></td>
+                  </tr>
+              @endforeach
+          </tbody> -->
+        </table>
+      </div>
     </div>
   </div>
-</div>
 </div>
 
 <div class='modal' id='showProfile' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabelProfile' aria-hidden='true'>
