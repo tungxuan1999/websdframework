@@ -72,7 +72,6 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'role_id' => 3,
-            'remember_token' =>  Str::random(10),
         ]);
 
         // Mail::send('emails.welcome', $data, function($message) use ($data)

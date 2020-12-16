@@ -69,127 +69,173 @@ class OrderController extends Controller
 
     public function postBuyItem(Request $request)
     {
-        if(strlen($request->input('type'))>0)
+        if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
         {
-            switch($request->input('type'))
+            if(strlen($request->input('type'))>0)
             {
-                case "Update":{
-                    $id = $request->input('id');
-                    $order_id = $request->input('order_id');
-                    $product_id = $request->input('product_id');
-                    if(strlen($order_id) != 0 && strlen($product_id) != 0 && strlen($id) != 0)
-                    {
-                        $orders_products = DB::table('order_product')->where('order_id',"$order_id")->where('product_id',"$product_id")->first();
-                        if(!$orders_products)
-                        {
-                            date_default_timezone_set("Asia/Ho_Chi_Minh");
-                            $date_update = date("Y-m-d H:i:s");
-                            $affected = DB::table('order_product')
-                                ->where('id', "$id")
-                                ->update([
-                                            'product_id' =>  $request->input('product_id'),
-                                            'updated_at' => $date_update
-                                    ]);
-                            if($affected)
-                            {
-                                $notification = 'Update success';
-                            }
-                            else{
-                                $notification = 'Update fail';
-                            }
-                        }
-                        else{
-                            $notification = "Update fail, you already have to it";
-                        }
-                    }
-                    else {
-                        $notification = "Update fail";
-                    }
-                    
-                    return response()->json(['msg'=>$notification]);
-                }break;
-                case "Add":
+                switch($request->input('type'))
                 {
-                    $order_id = $request->input('order_id');
-                    $product_id = $request->input('product_id');
-                    if(strlen($order_id) != 0 && strlen($product_id) != 0)
-                    {
-                        $orders_products = DB::table('order_product')->where('order_id',"$order_id")->where('product_id',"$product_id")->first();
-                        if(!$orders_products)
+                    case "Update":{
+                        $id = $request->input('id');
+                        $order_id = $request->input('order_id');
+                        $product_id = $request->input('product_id');
+                        if(strlen($order_id) != 0 && strlen($product_id) != 0 && strlen($id) != 0)
                         {
-                            date_default_timezone_set("Asia/Ho_Chi_Minh");
-                            $date_update = date("Y-m-d H:i:s");
-                            $affected = DB::table('order_product')
-                                ->insert([
-                                            'order_id' =>  $request->input('order_id'),
-                                            'product_id' =>  $request->input('product_id'),
-                                            'updated_at' => $date_update,
-                                            'created_at' => $date_update
-                                    ]);
-                            if($affected)
+                            $orders_products = DB::table('order_product')->where('order_id',"$order_id")->where('product_id',"$product_id")->first();
+                            if(!$orders_products)
                             {
-                                $notification = 'Add success';
+                                date_default_timezone_set("Asia/Ho_Chi_Minh");
+                                $date_update = date("Y-m-d H:i:s");
+                                $affected = DB::table('order_product')
+                                    ->where('id', "$id")
+                                    ->update([
+                                                'product_id' =>  $request->input('product_id'),
+                                                'updated_at' => $date_update
+                                        ]);
+                                if($affected)
+                                {
+                                    $notification = 'Update success';
+                                }
+                                else{
+                                    $notification = 'Update fail';
+                                }
                             }
                             else{
-                                $notification = 'Add fail';
+                                $notification = "Update fail, you already have to it";
                             }
                         }
-                        else{
-                            $notification = "Add fail, you already have to it";
+                        else {
+                            $notification = "Update fail";
                         }
-                    }
-                    else {
-                        $notification = "Add fail";
-                    }
-                    
-                    return response()->json(['msg'=>$notification]);
-                }break;
-                case "Delete":
-                {
-                    $id = $request->input('id');
-                    if(strlen($id) != 0)
+                        
+                        return response()->json(['msg'=>$notification]);
+                    }break;
+                    case "Add":
                     {
-                        $orders_products = DB::table('order_product')->where('id',"$id");
-                        if($orders_products->first())
+                        $order_id = $request->input('order_id');
+                        $product_id = $request->input('product_id');
+                        if(strlen($order_id) != 0 && strlen($product_id) != 0)
                         {
-                            $orders_products->delete();
-                            if($orders_products)
+                            $orders_products = DB::table('order_product')->where('order_id',"$order_id")->where('product_id',"$product_id")->first();
+                            if(!$orders_products)
                             {
-                                $notification = 'Delete success';
+                                date_default_timezone_set("Asia/Ho_Chi_Minh");
+                                $date_update = date("Y-m-d H:i:s");
+                                $affected = DB::table('order_product')
+                                    ->insert([
+                                                'order_id' =>  $request->input('order_id'),
+                                                'product_id' =>  $request->input('product_id'),
+                                                'updated_at' => $date_update,
+                                                'created_at' => $date_update
+                                        ]);
+                                if($affected)
+                                {
+                                    $notification = 'Add success';
+                                }
+                                else{
+                                    $notification = 'Add fail';
+                                }
                             }
                             else{
-                                $notification = 'Delete fail';
+                                $notification = "Add fail, you already have to it";
                             }
                         }
-                        else{
-                            $notification = "Delete fail, don't find it";
+                        else {
+                            $notification = "Add fail";
                         }
+                        
+                        return response()->json(['msg'=>$notification]);
+                    }break;
+                    case "Delete":
+                    {
+                        $id = $request->input('id');
+                        if(strlen($id) != 0)
+                        {
+                            $orders_products = DB::table('order_product')->where('id',"$id");
+                            if($orders_products->first())
+                            {
+                                $orders_products->delete();
+                                if($orders_products)
+                                {
+                                    $notification = 'Delete success';
+                                }
+                                else{
+                                    $notification = 'Delete fail';
+                                }
+                            }
+                            else{
+                                $notification = "Delete fail, don't find it";
+                            }
+                        }
+                        else {
+                            $notification = "Delete fail";
+                        }
+                        
+                        return response()->json(['msg'=>$notification]);
+                    }break;
+                    default:{
+                        return response()->json(['msg'=>"Error server"]);
                     }
-                    else {
-                        $notification = "Delete fail";
-                    }
-                    
-                    return response()->json(['msg'=>$notification]);
-                }break;
-                default:{
-                    return response()->json(['msg'=>"Error server"]);
                 }
             }
+            else return response()->json(['msg'=>"Error server"]);
         }
-        else return response()->json(['msg'=>"Error server"]);
+        else
+        {
+            return response()->json(['msg'=>"You don't permission"]);
+        }
     }
     
     public function postOrder(Request $request)
     {
-        switch($request->input('type'))
-            {
-                case "update":{
-                    $notification = $this->checkNull($request);
-                    if($notification == "")
+        if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+        {
+            switch($request->input('type'))
+                {
+                    case "update":{
+                        $notification = $this->checkNull($request);
+                        if($notification == "")
+                        {
+                            $idd = $request->input('id');
+                            $profile = DB::table('orders')->find($idd);
+                            if($profile)
+                            {
+                                $user_id = $request->input('user_id');
+                                $user = DB::table('users')->where('id',"$user_id");
+                                if($user->first())
+                                {
+                                    date_default_timezone_set("Asia/Ho_Chi_Minh");
+                                    $date_update = date("Y-m-d H:i:s");
+                                    $affected = DB::table('orders')
+                                        ->where('id', $idd)
+                                        ->update(['user_id' =>  $request->input('user_id'),
+                                                    'title' =>  $request->input('title'),
+                                                    'body' =>  $request->input('body'),
+                                                    'status' =>  $request->input('status'),
+                                                    'updated_at' => $date_update
+                                            ]);
+                                    if($affected)
+                                    {
+                                        $notification = ('Update success');
+                                    }
+                                    else{
+                                        $notification = ('Update fail');
+                                    }
+                                }
+                                else {
+                                    $notification = ("Update fail, don't find user_id");
+                                }
+                            }
+                            else{
+                                $notification = ("Update fail, don't find id");
+                            }
+                        }
+                        return response()->json(['msg'=>$notification]);
+                    }break;
+                    case "add":
                     {
-                        $idd = $request->input('id');
-                        $profile = DB::table('orders')->find($idd);
-                        if($profile)
+                        $notification = $this->checkNull($request);
+                        if($notification == "")
                         {
                             $user_id = $request->input('user_id');
                             $user = DB::table('users')->where('id',"$user_id");
@@ -198,95 +244,63 @@ class OrderController extends Controller
                                 date_default_timezone_set("Asia/Ho_Chi_Minh");
                                 $date_update = date("Y-m-d H:i:s");
                                 $affected = DB::table('orders')
-                                    ->where('id', $idd)
-                                    ->update(['user_id' =>  $request->input('user_id'),
+                                    ->insert([
+                                                'user_id' =>  $request->input('user_id'),
                                                 'title' =>  $request->input('title'),
                                                 'body' =>  $request->input('body'),
                                                 'status' =>  $request->input('status'),
-                                                'updated_at' => $date_update
+                                                'updated_at' => $date_update,
+                                                'created_at' => $date_update
                                         ]);
                                 if($affected)
                                 {
-                                    $notification = ('Update success');
+                                    $notification = ('Add success');
                                 }
                                 else{
-                                    $notification = ('Update fail');
+                                    $notification = ('Add fail');
                                 }
                             }
                             else {
-                                $notification = ("Update fail, don't find user_id");
+                                $notification = ("Add fail, don't find user_id");
+                            }
+                        }
+                        return response()->json(['msg'=>$notification]);
+                    }break;
+                    case 'delete':
+                    {
+                        $idd = $request->input('id');
+                        if($idd != "")
+                        {
+                            $user = DB::table('orders')->where('id', $idd);
+                            if($user->first())
+                            {
+                                $user->delete();
+                                if($user)
+                                {
+                                    $notification = ('Delete success');
+                                }
+                                else{
+                                    $notification = ('Delete fail');
+                                }
+                            }
+                            else{
+                                $notification = ("Delete fail, can't find user_id");
                             }
                         }
                         else{
-                            $notification = ("Update fail, don't find id");
+                            return response()->json(['msg'=>"ID null"]);
                         }
+                        return response()->json(['msg'=>$notification]);
                     }
-                    return response()->json(['msg'=>$notification]);
-                }break;
-                case "add":
-                {
-                    $notification = $this->checkNull($request);
-                    if($notification == "")
-                    {
-                        $user_id = $request->input('user_id');
-                        $user = DB::table('users')->where('id',"$user_id");
-                        if($user->first())
-                        {
-                            date_default_timezone_set("Asia/Ho_Chi_Minh");
-                            $date_update = date("Y-m-d H:i:s");
-                            $affected = DB::table('orders')
-                                ->insert([
-                                            'user_id' =>  $request->input('user_id'),
-                                            'title' =>  $request->input('title'),
-                                            'body' =>  $request->input('body'),
-                                            'status' =>  $request->input('status'),
-                                            'updated_at' => $date_update,
-                                            'created_at' => $date_update
-                                    ]);
-                            if($affected)
-                            {
-                                $notification = ('Add success');
-                            }
-                            else{
-                                $notification = ('Add fail');
-                            }
-                        }
-                        else {
-                            $notification = ("Add fail, don't find user_id");
-                        }
+                    break;
+                    default:{
+                        return response()->json(['msg'=>"Error server"]);
                     }
-                    return response()->json(['msg'=>$notification]);
-                }break;
-                case 'delete':
-                {
-                    $idd = $request->input('id');
-                    if($idd != "")
-                    {
-                        $user = DB::table('orders')->where('id', $idd);
-                        if($user->first())
-                        {
-                            $user->delete();
-                            if($user)
-                            {
-                                $notification = ('Delete success');
-                            }
-                            else{
-                                $notification = ('Delete fail');
-                            }
-                        }
-                        else{
-                            $notification = ("Delete fail, can't find user_id");
-                        }
-                    }
-                    else{
-                        return response()->json(['msg'=>"ID null"]);
-                    }
-                    return response()->json(['msg'=>$notification]);
                 }
-                break;
-                default:{
-                    return response()->json(['msg'=>"Error server"]);
-                }
+            }
+            else
+            {
+                return response()->json(['msg'=>"You don't permission"]);
             }
     }
 

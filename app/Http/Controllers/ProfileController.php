@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 use DB;
 
 class ProfileController extends Controller
@@ -24,6 +25,18 @@ class ProfileController extends Controller
         //
         $profiles = DB::table('profiles')->get();
         return view('profile.profiles',  ['profiles' => $profiles]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showmyprofile()
+    {
+        //
+        $profile = DB::table('profiles')->where('user_id',Auth::user()->id)->first();
+        return view('profile.edit',  ['profile' => $profile]);
     }
 
     /**
@@ -177,74 +190,128 @@ class ProfileController extends Controller
             }
         }
 
-    public function postProfile(Request $request)
+    public function postMyProfile(Request $request)
     {
-        if(strlen($request->input('type'))>0)
+        $idd = Auth::user()->id;
+        $profile = DB::table('profiles')->where('user_id',"$idd");
+        if($profile->first())
         {
-            switch($request->input('type'))
+            date_default_timezone_set("Asia/Ho_Chi_Minh");
+            $date_update = date("Y-m-d H:i:s");
+            $affected = DB::table('profiles')
+                ->where('user_id', "$idd")
+                ->update(['full_name' =>  $request->input('full_name'),
+                            'address' =>  $request->input('address'),
+                            'avatar' => $request->input('b64'),
+                            'birthday' =>  $request->input('birthday'),
+                            'updated_at' => $date_update
+                    ]);
+            if($affected)
             {
-                case "update":{
-                    $idd = $request->input('user_id');
-                    $profile = DB::table('profiles')->where('user_id',"$idd")->first();
-                    if($profile->first())
-                    {
-                        date_default_timezone_set("Asia/Ho_Chi_Minh");
-                        $date_update = date("Y-m-d H:i:s");
-                        $affected = DB::table('profiles')
-                            ->where('user_id', "$idd")
-                            ->update(['full_name' =>  $request->input('full_name'),
-                                        'address' =>  $request->input('address'),
-                                        'avatar' => $request->input('b64'),
-                                        'birthday' =>  $request->input('birthday'),
-                                        'updated_at' => $date_update
-                                ]);
-                        if($affected)
-                        {
-                            $notification = 'Update success';
-                        }
-                        else{
-                            $notification = 'Update fail';
-                        }
-                    }
-                    else{
-                        $notification = "Update fail, don't find user_id";
-                    }
-                    return response()->json(['msg'=>$notification]);
-                }break;
-                case "add":
-                {
-                    $idd = $request->input('user_id');
-                    $profile = DB::table('profiles')->where('user_id',"$idd");
-                    if(!$profile->first())
-                    {
-                        date_default_timezone_set("Asia/Ho_Chi_Minh");
-                        $date_update = date("Y-m-d H:i:s");
-                        $affected = DB::table('profiles')
-                            ->insert([
-                                        'user_id' =>  $request->input('user_id'),
-                                        'full_name' =>  $request->input('full_name'),
-                                        'avatar' => $request->input('b64'),
-                                        'address' =>  $request->input('address'),
-                                        'birthday' =>  $request->input('birthday'),
-                                        'updated_at' => $date_update,
-                                        'created_at' => $date_update
-                                ]);
-                        if($affected)
-                        {
-                            $notification = 'Add success';
-                        }
-                        else{
-                            $notification = 'Add fail';
-                        }
-                        return response()->json(['msg'=>$notification]);
-                    }
-                    else{
-                        return response()->json(['msg'=>"User ID exist"]);
-                    }
-                }break;
+                $notification = ('Update success');
+            }
+            else{
+                $notification = ('Update fail');
             }
         }
-        else return response()->json(['msg'=>"Error server"]);
+        else{
+            date_default_timezone_set("Asia/Ho_Chi_Minh");
+            $date_update = date("Y-m-d H:i:s");
+            $affected = DB::table('profiles')
+                ->insert([
+                            'user_id' =>  Auth::user()->id,
+                            'full_name' =>  $request->input('full_name'),
+                            'avatar' => $request->input('b64'),
+                            'address' =>  $request->input('address'),
+                            'birthday' =>  $request->input('birthday'),
+                            'updated_at' => $date_update,
+                            'created_at' => $date_update
+                    ]);
+            if($affected)
+            {
+                $notification = ('Add success');
+            }
+            else{
+                $notification = ('Add fail');
+            }
+        }
+        return response()->json(['msg'=>$notification]);
+    }
+
+    public function postProfile(Request $request)
+    {
+        if(Auth::user()->role_id == 1)
+        {
+            if(strlen($request->input('type'))>0)
+            {
+                switch($request->input('type'))
+                {
+                    case "update":{
+                        $idd = $request->input('user_id');
+                        $profile = DB::table('profiles')->where('user_id',"$idd")->first();
+                        if($profile->first())
+                        {
+                            date_default_timezone_set("Asia/Ho_Chi_Minh");
+                            $date_update = date("Y-m-d H:i:s");
+                            $affected = DB::table('profiles')
+                                ->where('user_id', "$idd")
+                                ->update(['full_name' =>  $request->input('full_name'),
+                                            'address' =>  $request->input('address'),
+                                            'avatar' => $request->input('b64'),
+                                            'birthday' =>  $request->input('birthday'),
+                                            'updated_at' => $date_update
+                                    ]);
+                            if($affected)
+                            {
+                                $notification = 'Update success';
+                            }
+                            else{
+                                $notification = 'Update fail';
+                            }
+                        }
+                        else{
+                            $notification = "Update fail, don't find user_id";
+                        }
+                        return response()->json(['msg'=>$notification]);
+                    }break;
+                    case "add":
+                    {
+                        $idd = $request->input('user_id');
+                        $profile = DB::table('profiles')->where('user_id',"$idd");
+                        if(!$profile->first())
+                        {
+                            date_default_timezone_set("Asia/Ho_Chi_Minh");
+                            $date_update = date("Y-m-d H:i:s");
+                            $affected = DB::table('profiles')
+                                ->insert([
+                                            'user_id' =>  $request->input('user_id'),
+                                            'full_name' =>  $request->input('full_name'),
+                                            'avatar' => $request->input('b64'),
+                                            'address' =>  $request->input('address'),
+                                            'birthday' =>  $request->input('birthday'),
+                                            'updated_at' => $date_update,
+                                            'created_at' => $date_update
+                                    ]);
+                            if($affected)
+                            {
+                                $notification = 'Add success';
+                            }
+                            else{
+                                $notification = 'Add fail';
+                            }
+                            return response()->json(['msg'=>$notification]);
+                        }
+                        else{
+                            return response()->json(['msg'=>"User ID exist"]);
+                        }
+                    }break;
+                }
+            }
+            else return response()->json(['msg'=>"Error server"]);
+        }
+        else{
+            return response()->json(['msg'=>"You not permission"]);
+        }
     }
 
     /**

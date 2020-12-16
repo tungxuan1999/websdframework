@@ -265,7 +265,7 @@
       var result           = '';
       var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       for ( var i = 0; i < 10; i++ ) {
-          result += characters.charAt(Math.floor(Math.random() * characters.length));
+          result += characters.charAt(Math.floor(Math.random() * 10));
       }
       document.getElementById('remember_token').value = result;
     }

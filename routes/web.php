@@ -22,7 +22,7 @@ use App\Http\Controllers\KindController;
 Route::get('/home', function () {
     return view('home1');
 })->middleware(['auth','role:viewer']);
-Route::get('/404', function () {
+Route::get('/error.404', function () {
     return view('errors/404');
 });
 
@@ -56,6 +56,8 @@ Route::resource('users', UserController::class)->middleware(['auth','role:admin'
 Route::get('users/show/{id}', [UserController::class, 'show'])->middleware(['auth','role:viewer']);
 Route::resource('profiles', ProfileController::class)->middleware(['auth','role:admin']);
 Route::get('profiles/show/{id}', [ProfileController::class, 'show'])->middleware(['auth','role:viewer']);
+Route::get('myprofileupload', [ProfileController::class, 'showmyprofile'])->middleware(['auth','role:viewer']);
+
 
 Route::resource('orders', OrderController::class)->middleware(['auth','role:editor']);
 Route::get('orders/show/{id}', [OrderController::class, 'show'])->middleware(['auth','role:editor']);
@@ -67,6 +69,7 @@ Route::post('/checkmail',[UserController::class, 'checkEmail'])->name('user.chec
 Route::post('/getUser',[UserController::class, 'getUser'])->name('user.getUser');
 Route::post('/getprofile',[ProfileController::class, 'getProfile'])->name('profile.getProfile');
 Route::post('/postprofile',[ProfileController::class, 'postProfile'])->name('profile.postProfile');
+Route::post('/postmyprofile',[ProfileController::class, 'postMyProfile'])->name('profile.postMyProfile');
 Route::post('/getKinds',[KindController::class, 'getKinds'])->name('kind.getKinds');
 Route::post('/orders/show/postitem',[OrderController::class, 'postBuyItem'])->name('order.postBuyItem');
 Route::post('/orders/show/postorder',[OrderController::class, 'postOrder'])->name('order.postOrder');
