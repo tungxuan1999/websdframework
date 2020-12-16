@@ -13,6 +13,7 @@ class ProfileController extends Controller
     public function ShowMessage($mess) {
         return "<div class='alert alert-danger'>$mess</div>";
     }
+
     /**
      * Display a listing of the resource.
      *

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Kind;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,6 +19,8 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
+        Role::$i = 0;
+        Role::factory(3)->create();
         User::factory(10)->create();
         Kind::factory(4)->create();
         Product::factory(20)->create()->each(function($Product)

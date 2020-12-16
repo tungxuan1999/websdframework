@@ -20,6 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id'
     ];
 
     /**
@@ -40,4 +41,37 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function role() {
+        return $this->belongsTo('App\Models\Role');
+    }
+
+    public function hasRole($role) {
+        // switch($this->role->name)
+        // {
+        //     case 'admin':{
+        //         return false;
+        //     }
+        //     case 'editor':{
+        //         if($role == 'viewer')
+        //             return false;
+        //         if($role == 'editor')
+        //             return false;
+        //         return true;
+        //     }
+        //     case 'viewer':{
+        //         if($role == 'viewer')
+        //             return false;
+        //         return true;
+        //     }
+        // }
+        // // if($this->role->name == 'admin')
+        // //     return true;
+        // // else
+            if(strcmp('admin', $this->role->name)==0)
+                return true;
+            if(strcmp('editor', $this->role->name)==0 && (strcmp('viewer', $role)==0 || strcmp('editor', $role)==0))
+                return true;
+            return strcmp($role, $this->role->name)==0 ;
+     }
 }

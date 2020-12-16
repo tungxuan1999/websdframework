@@ -19,9 +19,9 @@ use App\Http\Controllers\KindController;
 |
 */
 
-Route::get('/', function () {
+Route::get('/home', function () {
     return view('home1');
-});
+})->middleware(['auth','role:viewer']);
 Route::get('/404', function () {
     return view('errors/404');
 });
@@ -29,38 +29,38 @@ Route::get('/404', function () {
 //Main
 Route::get('/users', function () {
     return view('user/users');
-});
+})->middleware(['auth','role:admin']);
 Route::get('/profiles', function () {
     return view('profile/profiles');
-});
+})->middleware(['auth','role:admin']);
 Route::get('/kinds', function () {
     return view('kind/list');
-});
+})->middleware(['auth','role:editor']);
 Route::get('/orders', function () {
     return view('order/list');
-});
+})->middleware(['auth','role:editor']);
 Route::get('/products', function () {
     return view('product/list');
-});
+})->middleware(['auth','role:editor']);
 Route::get('/check_fail', function (){
     echo "check_fail page";
-    return view('home');
+    return view('home1');
 });
 Route::get('check_age/{age?}', function ($age) {
     echo $age;
-    return view('home');
+    return view('home1');
 })->middleware(CheckAge::class);
 
 //
-Route::resource('users', UserController::class);
-Route::get('users/show/{id}', [UserController::class, 'show']);
-Route::resource('profiles', ProfileController::class);
-Route::get('profiles/show/{id}', [ProfileController::class, 'show']);
+Route::resource('users', UserController::class)->middleware(['auth','role:admin']);
+Route::get('users/show/{id}', [UserController::class, 'show'])->middleware(['auth','role:viewer']);
+Route::resource('profiles', ProfileController::class)->middleware(['auth','role:admin']);
+Route::get('profiles/show/{id}', [ProfileController::class, 'show'])->middleware(['auth','role:viewer']);
 
-Route::resource('orders', OrderController::class);
-Route::get('orders/show/{id}', [OrderController::class, 'show']);
-Route::resource('products', ProductController::class);
-Route::resource('kinds', KindController::class);
+Route::resource('orders', OrderController::class)->middleware(['auth','role:editor']);
+Route::get('orders/show/{id}', [OrderController::class, 'show'])->middleware(['auth','role:editor']);
+Route::resource('products', ProductController::class)->middleware(['auth','role:editor']);
+Route::resource('kinds', KindController::class)->middleware(['auth','role:editor']);
 
 //api ajax
 Route::post('/checkmail',[UserController::class, 'checkEmail'])->name('user.checkEmail');
@@ -72,4 +72,4 @@ Route::post('/orders/show/postitem',[OrderController::class, 'postBuyItem'])->na
 Route::post('/orders/show/postorder',[OrderController::class, 'postOrder'])->name('order.postOrder');
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

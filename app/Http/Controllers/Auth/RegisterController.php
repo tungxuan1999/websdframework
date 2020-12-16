@@ -8,6 +8,9 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Mail\WelcomeMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
@@ -64,10 +67,23 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'role_id' => 3,
+            'remember_token' =>  Str::random(10),
         ]);
+
+        // Mail::send('emails.welcome', $data, function($message) use ($data)
+        // {
+        //     $message->from('no-reply@site.com', "Site name");
+        //     $message->subject("Welcome to site name");
+        //     $message->to($data['email']);
+        // });
+
+        Mail::to($data['email'])->send(new WelcomeMail($user));
+
+        return $user;
     }
 }

@@ -34,10 +34,29 @@
               echo("</tbody>");
               foreach($users as $user)
               {
-                  echo("<tr>");
-                  foreach($columns as $i)
+                echo("<tr>");
+                foreach($columns as $i)
                 {
-                      echo("<td><a href='/users/show/{$user->id}'>{$user->$i}</a></td>");
+                      if($i == 'role_id')
+                      {
+                          switch($user->$i)
+                          {
+                            case 1:
+                            {
+                              echo("<td><a href='/users/show/{$user->id}'>Admin</a></td>");
+                            }break;
+                            case 2:
+                            {
+                              echo("<td><a href='/users/show/{$user->id}'>Editor</a></td>");
+                            }break;
+                            case 3:
+                            {
+                              echo("<td><a href='/users/show/{$user->id}'>Viewer</a></td>");
+                            }break;
+                          }
+                      }
+                      else
+                        echo("<td><a href='/users/show/{$user->id}'>{$user->$i}</a></td>");
                 }
                 //Information User
                 echo("<td>
