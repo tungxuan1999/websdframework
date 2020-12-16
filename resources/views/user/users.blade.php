@@ -37,14 +37,14 @@
                   echo("<tr>");
                   foreach($columns as $i)
                 {
-                      echo("<td><a href='/profiles/{$user->id}'>{$user->$i}</a></td>");
+                      echo("<td><a href='/users/show/{$user->id}'>{$user->$i}</a></td>");
                 }
                 //Information User
                 echo("<td>
                     <li class='nav-item'>
                       <a class='nav-link collapsed' href='#' data-toggle='collapse' data-target='#collapseEdit{$user->id}' aria-expanded='true' aria-controls='collapseEdit{$user->id}'>
                           <i class='fas fa-fw fa-cog'></i>
-                          <span>Edit</span>
+                          <span>Custom</span>
                       </a>
                       <div id='collapseEdit{$user->id}' class='collapse' aria-labelledby='headingTwo' data-parent='#accordionSidebar'>
                           <div class='bg-white py-2 collapse-inner rounded'>

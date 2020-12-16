@@ -40,7 +40,7 @@
                                     echo("<td><img height='100' src='{$profile->$i}'></td>");
                                 }
                                 else
-                                echo("<td><a href='/profiles/{$profile->id}'>{$profile->$i}</a></td>");
+                                echo("<td><a href='/profiles/show/{$profile->id}'>{$profile->$i}</a></td>");
                             }
                             echo("<td><input type='button' class='btn btn-primary' onclick=".'"'."showDialog($profile->id,$profile->user_id,'$profile->avatar','$profile->full_name','$profile->address','$profile->birthday','update')".'"'." value='Edit'/></td>");
                             echo("</tr>");

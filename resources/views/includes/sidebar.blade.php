@@ -10,7 +10,7 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
     <div class="sidebar-brand-icon rotate-n-15">
         <i class="fas fa-laugh-wink"></i>
     </div>
@@ -115,16 +115,13 @@
         <span>Kind Product</span>
     </a>
     <div id="collapseKind" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="/users">User</a>
-        <a class="collapse-item" href="/profiles">Profile</a>
-        <a class="collapse-item" href="/profiles">Custom Kind</a>
+        <div class="bg-white py-2 collapse-inner rounded" id="listkinds">
         </div>
     </div>
     </li>
 
     <li class="nav-item">
-    <a class="nav-link" href="charts.html">
+    <a class="nav-link" href="/orders">
         <i class="fas fa-fw fa-chart-area"></i>
         <span>Orders</span></a>
     </li>

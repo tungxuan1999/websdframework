@@ -20,36 +20,27 @@ use App\Http\Controllers\KindController;
 */
 
 Route::get('/', function () {
-    return view('home');
+    return view('home1');
 });
-Route::get('/signup', function () {
-    return view('signup');
+Route::get('/404', function () {
+    return view('errors/404');
 });
-Route::get('/status', function () {
-    return view('status');
-});
-Route::get('/contact', function () {
-    return view('contact');
-});
+
+//Main
 Route::get('/users', function () {
-    $users = DB::table('users')->get();
-    return view('user/users',  ['users' => $users]);
+    return view('user/users');
 });
 Route::get('/profiles', function () {
-    $profiles = DB::table('profiles')->get();
-    return view('profile/profiles',  ['profiles' => $profiles]);
+    return view('profile/profiles');
 });
 Route::get('/kinds', function () {
-    $profiles = DB::table('kinds')->get();
-    return view('kind/list',  ['kinds' => $profiles]);
+    return view('kind/list');
 });
 Route::get('/orders', function () {
-    $profiles = DB::table('orders')->get();
-    return view('order/list',  ['orders' => $profiles]);
+    return view('order/list');
 });
 Route::get('/products', function () {
-    $profiles = DB::table('products')->get();
-    return view('product/list',  ['products' => $profiles]);
+    return view('product/list');
 });
 Route::get('/check_fail', function (){
     echo "check_fail page";
@@ -59,15 +50,26 @@ Route::get('check_age/{age?}', function ($age) {
     echo $age;
     return view('home');
 })->middleware(CheckAge::class);
-Route::resource('users', UserController::class);
-Route::get('user/users/{id}', [UserController::class, 'show']);
-Route::resource('profiles', ProfileController::class);
-Route::get('profiles/{id}', [ProfileController::class, 'show']);
 
-Route::post('/checkmail',[UserController::class, 'checkEmail'])->name('user.checkEmail');
-Route::post('/getprofile',[ProfileController::class, 'getProfile'])->name('profile.getProfile');
-Route::post('/postprofile',[ProfileController::class, 'postProfile'])->name('profile.postProfile');
+//
+Route::resource('users', UserController::class);
+Route::get('users/show/{id}', [UserController::class, 'show']);
+Route::resource('profiles', ProfileController::class);
+Route::get('profiles/show/{id}', [ProfileController::class, 'show']);
 
 Route::resource('orders', OrderController::class);
+Route::get('orders/show/{id}', [OrderController::class, 'show']);
 Route::resource('products', ProductController::class);
 Route::resource('kinds', KindController::class);
+
+//api ajax
+Route::post('/checkmail',[UserController::class, 'checkEmail'])->name('user.checkEmail');
+Route::post('/getUser',[UserController::class, 'getUser'])->name('user.getUser');
+Route::post('/getprofile',[ProfileController::class, 'getProfile'])->name('profile.getProfile');
+Route::post('/postprofile',[ProfileController::class, 'postProfile'])->name('profile.postProfile');
+Route::post('/getKinds',[KindController::class, 'getKinds'])->name('kind.getKinds');
+Route::post('/orders/show/postitem',[OrderController::class, 'postBuyItem'])->name('order.postBuyItem');
+Route::post('/orders/show/postorder',[OrderController::class, 'postOrder'])->name('order.postOrder');
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

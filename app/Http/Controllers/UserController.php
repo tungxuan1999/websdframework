@@ -54,7 +54,14 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return view('user/users', ['users'=> array(User::findOrFail($id))]);
+        $user = DB::table('users')->where('id',$id)->first();
+        if($user)
+        {
+            $profile =  DB::table('profiles')->where('user_id',$id)->first();
+            return view('user/showinfuser', ['users'=> $user,'profile'=>$profile]);
+        }
+        else
+            return view('errors/404');
     }
 
     /**
@@ -101,21 +108,28 @@ class UserController extends Controller
                     {
                         $idd = $request->input('id');
                         $profile = DB::table('users')->find($idd);
-                        date_default_timezone_set("Asia/Ho_Chi_Minh");
-                        $date_update = date("Y-m-d H:i:s");
-                        $affected = DB::table('users')
-                            ->where('id', $idd)
-                            ->update(['name' =>  $request->input('name'),
-                                        'password' =>  Hash::make('password'),
-                                        'remember_token' =>  $request->input('remember_token'),
-                                        'updated_at' => $date_update
-                                ]);
-                        if($affected)
+                        if($profile)
                         {
-                            $notification = $this->ShowMessage('Update success');
+                            date_default_timezone_set("Asia/Ho_Chi_Minh");
+                            $date_update = date("Y-m-d H:i:s");
+                            $affected = DB::table('users')
+                                ->where('id', $idd)
+                                ->update(['name' =>  $request->input('name'),
+                                            'password' =>  Hash::make($request->input('password')),
+                                            'remember_token' =>  $request->input('remember_token'),
+                                            'updated_at' => $date_update
+                                    ]);
+                            if($affected)
+                            {
+                                $notification = $this->ShowMessage('Update success');
+                            }
+                            else{
+                                $notification = $this->ShowMessage('Update fail');
+                            }
                         }
-                        else{
-                            $notification = $this->ShowMessage('Update fail');
+                        else
+                        {
+                            $notification = $this->ShowMessage("Update fail, don't find id");
                         }
                     }
                     return redirect('/users')->with('notification',$notification);
@@ -125,8 +139,8 @@ class UserController extends Controller
                     $notification = $this->checkNull($request);
                     if($notification == "")
                     {
-                        $profile = DB::table('users')->where('email',$request->input('email'))->first();
-                        if(!$profile)
+                        $profile = DB::table('users')->where('email',$request->input('email'));
+                        if(!$profile->first())
                         {
                             date_default_timezone_set("Asia/Ho_Chi_Minh");
                             $date_update = date("Y-m-d H:i:s");
@@ -165,11 +179,6 @@ class UserController extends Controller
                             if($user)
                             {
                                 $notification = $this->ShowMessage('Delete success');
-                                $profile = DB::table('profiles')->where('user_id',$idd);
-                                if($profile->first())
-                                {
-                                    $profile->delete();
-                                }
                             }
                             else{
                                 $notification = $this->ShowMessage('Delete fail');
@@ -214,6 +223,25 @@ class UserController extends Controller
         }
         else {
             return response()->json(['msg'=>"Email null"]);
+        }
+    }
+
+    public function getUser(Request $request)
+    {
+        if(strlen($request->input('id'))>0)
+        {
+            $users = DB::table('users')->where('id', $request->input('id'))->first();
+            if($users)
+            {
+                $user = array($users->name,$users->email);
+                return response()->json(['msg'=>"User is exist",'user'=>$user]);
+            }
+            else {
+                return response()->json(['msg'=>"User not exist",'user'=>null]);
+            }
+        }
+        else {
+            return response()->json(['msg'=>"Don't find id",'user'=>null]);
         }
     }
 }

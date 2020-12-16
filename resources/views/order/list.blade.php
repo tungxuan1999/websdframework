@@ -7,14 +7,14 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <!-- <h6 class="m-0 font-weight-bold text-primary">Profiles</h6> -->
-            <!-- <input type='button' onclick="showDialog(0,0,'','','','','add')" value='Add New'/> -->
+            <?php
+            if($notification = Session::get('notification'))
+            {
+                echo $notification;
+            }
+            ?>
+            <!-- <input class='btn btn-primary' type='button' style='width:100px' value='Add New'/> -->
         </div>
-        <?php
-        if($notification = Session::get('notification'))
-        {
-            echo $notification;
-        }
-        ?>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" style="width:100%" cellspacing="0">
@@ -35,14 +35,27 @@
                             echo("<tr>");
                             foreach($columns as $i)
                             {
-                                if($i == "image")
+                                if($i == "status")
                                 {
-                                    echo("<td><img height='100' src='{$profile->$i}'></td>");
+                                    switch($profile->$i)
+                                    {
+                                        case 0:{
+                                            echo("<td><a>Pending</a></td>");
+                                        }break;
+                                        case 1:{
+                                            echo("<td><a>Success</a></td>");
+                                        }break;
+                                        case 2:{
+                                            echo("<td><a>Fail</a></td>");
+                                        }break;
+                                    }
                                 }
                                 else
                                 echo("<td><a>{$profile->$i}</a></td>");
                             }
-                            echo("<td><input type='button' class='btn btn-primary' value='Edit'/></td>");
+                            echo("<td>
+                            <input class='collapse-item btn btn-primary' type='button' style='width:80px' onclick='"."window.open(".'"'."/orders/show/{$profile->id}".'")'.";' value='Show'/>
+                            </td>");
                             echo("</tr>");
                         }
                         echo("</tbody>");

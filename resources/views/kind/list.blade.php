@@ -7,14 +7,14 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <!-- <h6 class="m-0 font-weight-bold text-primary">Profiles</h6> -->
-            <!-- <input type='button' onclick="showDialog(0,0,'','','','','add')" value='Add New'/> -->
+            <?php
+            if($notification = Session::get('notification'))
+            {
+                echo $notification;
+            }
+            ?>
+            <input class='btn btn-primary' type='button' style='width:100px' value='Add New'/>
         </div>
-        <?php
-        if($notification = Session::get('notification'))
-        {
-            echo $notification;
-        }
-        ?>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" style="width:100%" cellspacing="0">
@@ -37,7 +37,20 @@
                             {
                                 echo("<td><a>{$profile->$i}</a></td>");
                             }
-                            echo("<td><input type='button' class='btn btn-primary' value='Edit'/></td>");
+                            echo("<td>
+                                <li class='nav-item'>
+                                <a class='nav-link collapsed' href='#' data-toggle='collapse' data-target='#collapseEdit{$profile->id}' aria-expanded='true' aria-controls='collapseEdit{$profile->id}'>
+                                    <i class='fas fa-fw fa-cog'></i>
+                                    <span>Custom</span>
+                                </a>
+                                <div id='collapseEdit{$profile->id}' class='collapse' aria-labelledby='headingTwo' data-parent='#accordionSidebar'>
+                                    <div class='bg-white py-2 collapse-inner rounded'>
+                                    <input class='collapse-item btn btn-primary' type='button' style='width:80px' value='Update'/>
+                                    <input class='collapse-item btn btn-primary' type='button' style='width:80px' value='Delete'/>
+                                    </div>
+                                </div>
+                                </li>
+                            </td>");
                             echo("</tr>");
                         }
                         echo("</tbody>");

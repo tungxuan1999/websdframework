@@ -55,7 +55,11 @@ class ProfileController extends Controller
     public function show($id)
 		{
 		   $profile =  DB::table('profiles')->where('id',$id)->first();
-			return View('profile.show',['profile'=>$profile]);
+            
+            if($profile)
+                return View('profile.show',['profile'=>$profile]);
+            else
+                return view('errors/404');
 		}
 
     public function getProfile(Request $request)
@@ -88,6 +92,21 @@ class ProfileController extends Controller
         return View('profile.edit',['profile'=>$profile]);
     }
 
+    public function checkNull($abc)
+    {
+        if(strlen($abc->input('user_id')) == 0)
+            return $this->ShowMessage("User ID null");
+        if(strlen($abc->input('full_name')) == 0)
+            return $this->ShowMessage("Name null");
+        if(strlen($abc->input('b64')) == 0)
+            return $this->ShowMessage("Image null");
+        if(strlen($abc->input('address')) == 0)
+            return $this->ShowMessage("Address null");
+        if(strlen($abc->input('birthday')) == 0)
+            return $this->ShowMessage("Birthday null");
+        return "";
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -100,34 +119,34 @@ class ProfileController extends Controller
             switch($id)
             {
                 case "update":{
-                    $idd = $request->input('user_id');
-                    $profile = DB::table('profiles')->where('user_id',"$idd")->first();
-                    if($profile)
+                    $notification = $this->checkNull($request);
+                    if($notification == "")
                     {
-                        $profile->full_name = $request->input('full_name');
-                        $profile->avatar = $request->input('b64');
-                        $profile->address = $request->input('address');
-                        $profile->birthday = $request->input('birthday');
-                        date_default_timezone_set("Asia/Ho_Chi_Minh");
-                        $date_update = date("Y-m-d H:i:s");
-                        $affected = DB::table('profiles')
-                            ->where('user_id', "$idd")
-                            ->update(['full_name' =>  $profile->full_name,
-                                        'address' =>  $profile->address,
-                                        'avatar' => $profile->avatar,
-                                        'birthday' =>  $profile->birthday,
-                                        'updated_at' => $date_update
-                                ]);
-                        if($affected)
+                        $idd = $request->input('user_id');
+                        $profile = DB::table('profiles')->where('user_id',"$idd");
+                        if($profile->first())
                         {
-                            $notification = $this->ShowMessage('Update success');
+                            date_default_timezone_set("Asia/Ho_Chi_Minh");
+                            $date_update = date("Y-m-d H:i:s");
+                            $affected = DB::table('profiles')
+                                ->where('user_id', "$idd")
+                                ->update(['full_name' =>  $request->input('full_name'),
+                                            'address' =>  $request->input('address'),
+                                            'avatar' => $request->input('b64'),
+                                            'birthday' =>  $request->input('birthday'),
+                                            'updated_at' => $date_update
+                                    ]);
+                            if($affected)
+                            {
+                                $notification = $this->ShowMessage('Update success');
+                            }
+                            else{
+                                $notification = $this->ShowMessage('Update fail');
+                            }
                         }
                         else{
-                            $notification = $this->ShowMessage('Update fail');
+                            $notification = $this->ShowMessage("Update fail, don't find user_id");
                         }
-                    }
-                    else{
-                        $notification = $this->ShowMessage("Update fail, don't find user_id");
                     }
                 return redirect('/profiles')->with('notification',$notification);
                 }break;
@@ -166,20 +185,16 @@ class ProfileController extends Controller
                 case "update":{
                     $idd = $request->input('user_id');
                     $profile = DB::table('profiles')->where('user_id',"$idd")->first();
-                    if($profile)
+                    if($profile->first())
                     {
-                        $profile->full_name = $request->input('full_name');
-                        $profile->avatar = $request->input('b64');
-                        $profile->address = $request->input('address');
-                        $profile->birthday = $request->input('birthday');
                         date_default_timezone_set("Asia/Ho_Chi_Minh");
                         $date_update = date("Y-m-d H:i:s");
                         $affected = DB::table('profiles')
                             ->where('user_id', "$idd")
-                            ->update(['full_name' =>  $profile->full_name,
-                                        'address' =>  $profile->address,
-                                        'avatar' => $profile->avatar,
-                                        'birthday' =>  $profile->birthday,
+                            ->update(['full_name' =>  $request->input('full_name'),
+                                        'address' =>  $request->input('address'),
+                                        'avatar' => $request->input('b64'),
+                                        'birthday' =>  $request->input('birthday'),
                                         'updated_at' => $date_update
                                 ]);
                         if($affected)
@@ -198,8 +213,8 @@ class ProfileController extends Controller
                 case "add":
                 {
                     $idd = $request->input('user_id');
-                    $profile = DB::table('profiles')->where('user_id',"$idd")->first();
-                    if(!$profile)
+                    $profile = DB::table('profiles')->where('user_id',"$idd");
+                    if(!$profile->first())
                     {
                         date_default_timezone_set("Asia/Ho_Chi_Minh");
                         $date_update = date("Y-m-d H:i:s");

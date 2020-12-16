@@ -15,8 +15,10 @@ class CreateKindProductTable extends Migration
     {
         Schema::create('kind_product', function (Blueprint $table) {
             $table->id();
-            $table->integer('kind_id');
-            $table->integer('product_id');
+            $table->bigInteger('kind_id');
+            $table->bigInteger('product_id');
+            $table->foreign('kind_id')->references('id')->on('kinds')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->timestamps();
         });
     }
