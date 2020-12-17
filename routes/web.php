@@ -62,6 +62,7 @@ Route::get('myprofileupload', [ProfileController::class, 'showmyprofile'])->midd
 Route::resource('orders', OrderController::class)->middleware(['auth','role:editor']);
 Route::get('orders/show/{id}', [OrderController::class, 'show'])->middleware(['auth','role:editor']);
 Route::resource('products', ProductController::class)->middleware(['auth','role:editor']);
+Route::get('products/show/{id}', [ProductController::class, 'show'])->middleware(['auth','role:editor']);
 Route::resource('kinds', KindController::class)->middleware(['auth','role:editor']);
 
 //api ajax
@@ -73,6 +74,6 @@ Route::post('/postmyprofile',[ProfileController::class, 'postMyProfile'])->name(
 Route::post('/getKinds',[KindController::class, 'getKinds'])->name('kind.getKinds');
 Route::post('/orders/show/postitem',[OrderController::class, 'postBuyItem'])->name('order.postBuyItem');
 Route::post('/orders/show/postorder',[OrderController::class, 'postOrder'])->name('order.postOrder');
-Auth::routes();
+Auth::routes(['verify' => true]);
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('verified');

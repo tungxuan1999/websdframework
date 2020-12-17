@@ -54,6 +54,21 @@ class ProductController extends Controller
     public function show($id)
     {
         //
+        $kind_product =  DB::table('kind_product')->where('kind_id',$id)->get();
+        if(count($kind_product) <= 0)
+        {
+            return view('errors/404');
+        }
+        $b = array();
+        foreach($kind_product as $i)
+        {
+            array_push($b, $i->product_id);
+        }
+        $products = DB::table('products')->whereIn('id',$b)->get();
+        if(count($products) > 0)
+            return view('product.list',  ['products' => $products]);
+        else
+            return view('errors/404');
     }
 
     /**

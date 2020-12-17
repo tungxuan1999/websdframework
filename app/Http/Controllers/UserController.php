@@ -87,6 +87,8 @@ class UserController extends Controller
             return $this->ShowMessage("PASSWORD null");
         if(strlen($abc->input('remember_token')) == 0)
             return $this->ShowMessage("REMEMBER TOKEN null");
+        if(strlen($abc->input('role_id')) == 0)
+            return $this->ShowMessage("Role null");
         return "";
     }
 
@@ -117,6 +119,7 @@ class UserController extends Controller
                                 ->update(['name' =>  $request->input('name'),
                                             'password' =>  Hash::make($request->input('password')),
                                             'remember_token' =>  $request->input('remember_token'),
+                                            'role_id' => $request->input('role_id'),
                                             'updated_at' => $date_update
                                     ]);
                             if($affected)
@@ -150,6 +153,7 @@ class UserController extends Controller
                                             'email' =>  $request->input('email'),
                                             'password' =>  Hash::make($request->input('password')),
                                             'remember_token' =>  $request->input('remember_token'),
+                                            'role_id' => $request->input('role_id'),
                                             'updated_at' => $date_update,
                                             'created_at' => $date_update
                                     ]);

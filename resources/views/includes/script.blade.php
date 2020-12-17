@@ -38,7 +38,7 @@
         {
             for(var i = 0; i < data.data.length; i++)
             {
-                $("#listkinds").append('<a class="collapse-item" href="/profiles">'+data.data[i].id+"."+data.data[i].name+'</a>');
+                $("#listkinds").append('<a class="collapse-item" href="/products/show/'+data.data[i].id+'">'+data.data[i].id+"."+data.data[i].name+'</a>');
             }
         }
         else {

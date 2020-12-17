@@ -14,7 +14,7 @@
               echo $notification;
           }
           ?>
-      <input class='btn btn-primary' type='button' style='width:100px' onclick="showDialog(0,'','','','','add')" value='Add New'/>
+      <input class='btn btn-primary' type='button' style='width:100px' onclick="showDialog(0,'','','','',1,'add')" value='Add New'/>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -67,8 +67,8 @@
                       </a>
                       <div id='collapseEdit{$user->id}' class='collapse' aria-labelledby='headingTwo' data-parent='#accordionSidebar'>
                           <div class='bg-white py-2 collapse-inner rounded'>
-                          <input class='collapse-item btn btn-primary' type='button' style='width:80px' onclick=".'"'."showDialog($user->id,'$user->name','$user->email','$user->password','$user->remember_token','update')".'"'." value='Update'/>
-                          <input class='collapse-item btn btn-primary' type='button' style='width:80px' onclick=".'"'."showDialog($user->id,'$user->name','$user->email','$user->password','$user->remember_token','delete')".'"'." value='Delete'/>
+                          <input class='collapse-item btn btn-primary' type='button' style='width:80px' onclick=".'"'."showDialog($user->id,'$user->name','$user->email','$user->password','$user->remember_token',$user->role_id,'update')".'"'." value='Update'/>
+                          <input class='collapse-item btn btn-primary' type='button' style='width:80px' onclick=".'"'."showDialog($user->id,'$user->name','$user->email','$user->password','$user->remember_token',$user->role_id,'delete')".'"'." value='Delete'/>
                           </div>
                       </div>
                     </li>
@@ -200,6 +200,14 @@
                         <div class="form-group" >
                             Password<input type="password" name="password" class="form-control form-control-user" id="password" placeholder="PASSWORD">
                         </div>
+                        <div class="form-group">
+                            Permission 
+                            <select name="role_id" id="role_id">
+                                <option value="1">Admin</option>  
+                                <option value="2">Editor</option>
+                                <option value="3">Viewer</option>
+                            </select>
+                        </div>
                         <div class="form-group" >
                             Token<input type="text" name="remember_token" class="form-control form-control-user" id="remember_token" placeholder="REMEMBER TOKEN" readonly>
                         </div>
@@ -269,7 +277,7 @@
       }
       document.getElementById('remember_token').value = result;
     }
-    function showDialog(id,name,email,password,remember_token,type)
+    function showDialog(id,name,email,password,remember_token,role_id,type)
     {
       $("#error").html('Notification:');
       var model = document.getElementById('showEdit');
@@ -279,20 +287,24 @@
             document.user.action = "{{ route('users.update','update') }}";
             document.getElementById('btUpdate').value = 'Update';
             document.getElementById('email').readOnly = true;
+            document.getElementById('role_id').disabled = false;
           }break;
           case 'add':{
             document.user.action = "{{ route('users.update','add') }}";
             document.getElementById('btUpdate').value = 'Add';
             document.getElementById('email').readOnly = false;
+            document.getElementById('role_id').disabled = false;
           }break;
           case 'delete':{
             document.user.action = "{{ route('users.update','delete') }}";
             document.getElementById('btUpdate').value = 'Delete';
             document.getElementById('email').readOnly = true;
+            document.getElementById('role_id').disabled = true;
           }
       }
       document.getElementById('exampleModalLabel').innerHTML = "Information User";
       document.getElementById('id').value = id;
+      document.getElementById('role_id').value = role_id;
       document.getElementById('name').value = name;
       document.getElementById('email').value = email;
       document.getElementById('password').value = '';

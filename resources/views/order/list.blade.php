@@ -7,6 +7,28 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <!-- <h6 class="m-0 font-weight-bold text-primary">Profiles</h6> -->
+            <tr>
+                <th>Status: </th>
+                <th>
+                    <select name="searchstatus" id="searchstatus">
+                        <option value="All">All</option>  
+                        <option value="Pending">Pending</option>  
+                        <option value="Success">Success</option>
+                        <option value="Fail">Fail</option>
+                    </select>
+                </th>
+                <th> From day: </th>
+                <th>
+                    <input type="date" name="firstdaycreate" id="firstdaycreate" value="">
+                </th>
+                <th> To day: </th>
+                <th>
+                    <input type="date" name="enddaycreate" id="enddaycreate" value="">
+                </th>
+                <th>
+                    <input type="button" class="collapse-item btn btn-primary" value="Search" onclick="onSearch()">
+                </th>
+            </tr>
             <?php
             if($notification = Session::get('notification'))
             {
@@ -65,4 +87,66 @@
         </div>
     </div>
 </div>
+<script>
+    function onSearch() {
+        var table, tr, td, i, txtValue, searchstatus, firstdaycreate, enddaycreate;
+        searchstatus = document.getElementById("searchstatus").value;
+        firstdaycreate = document.getElementById("firstdaycreate").value;
+        enddaycreate = document.getElementById("enddaycreate").value;
+        table = document.getElementById("dataTable");
+        tr = table.getElementsByTagName("tr");
+        if(firstdaycreate!= "" && enddaycreate!="" && firstdaycreate>enddaycreate)
+        {
+            alert("Form day must < To day");
+        }
+        else
+        {
+            if(enddaycreate != "")
+            {
+                enddaycreate = new Date(enddaycreate);
+                enddaycreate.setDate(enddaycreate.getDate() + 1);
+            }
+            for (i = 0; i < tr.length; i++) {
+                tr[i].style.display = "";
+                if (tr[i].getElementsByTagName("td")[4]) {
+                    txtValue = tr[i].getElementsByTagName("td")[4].textContent || tr[i].getElementsByTagName("td")[4].innerText;
+                    if(searchstatus != "All")
+                    {
+                        if (txtValue != searchstatus) {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+                if(tr[i].getElementsByTagName("td")[5])
+                {
+                    txtValue = tr[i].getElementsByTagName("td")[5].textContent || tr[i].getElementsByTagName("td")[5].innerText;
+                    
+                    if(firstdaycreate == "" || enddaycreate == "")
+                    {
+                        if(firstdaycreate == "" && enddaycreate != "")
+                        {
+                            if(txtValue > enddaycreate)
+                            {
+                                tr[i].style.display = "none";
+                            }
+                        }
+                        if(enddaycreate == "" && firstdaycreate != "")
+                        {
+                            if(txtValue < firstdaycreate)
+                            {
+                                tr[i].style.display = "none";
+                            }
+                        }
+                    }
+                    else{
+                        if(txtValue < firstdaycreate || txtValue > enddaycreate)
+                        {
+                                tr[i].style.display = "none";
+                        }
+                    }
+                }       
+            }
+        }
+    }
+</script>
 @endsection
