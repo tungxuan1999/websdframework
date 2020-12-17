@@ -90,6 +90,9 @@
 <script>
     function onSearch() {
         var table, tr, td, i, txtValue, searchstatus, firstdaycreate, enddaycreate;
+        document.getElementsByName('dataTable_length')[0].value = 100;
+        $( 'select[name ="dataTable_length"]' ).change();
+
         searchstatus = document.getElementById("searchstatus").value;
         firstdaycreate = document.getElementById("firstdaycreate").value;
         enddaycreate = document.getElementById("enddaycreate").value;
