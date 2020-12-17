@@ -21,7 +21,7 @@ use App\Http\Controllers\KindController;
 
 Route::get('/home', function () {
     return view('home1');
-})->middleware(['auth','role:viewer']);
+})->middleware('verified');
 Route::get('/error.404', function () {
     return view('errors/404');
 });
